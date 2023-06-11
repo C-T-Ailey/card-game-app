@@ -1,0 +1,35 @@
+.card-flex {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .card-template {
+    width: 96px;
+    height: 134px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+  
+  /* .pips {
+    height: 89px;
+    width: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    
+  } */
+
+  .pips {
+    height: 100%;
+    width: 90%;
+    margin: auto;
+  }
+  
+  .pip {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: black;
+  }
