@@ -23,6 +23,13 @@ function App() {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
+  const reset = () => {
+    setDeckState([])
+    setDeckDisplay([])
+    setPlayerHand([])
+    setHandDisplay([])
+  }
+
   class Deck {
       constructor(cards){
           this.cards = cards;
@@ -121,6 +128,7 @@ class Card {
       console.log(cards)
     } else {
       setGameState("game over")
+      reset()
     }
   }
 
