@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react';
 
 function App() {
 
-  const [deckState, setDeckState] = useState()
+  const [deckState, setDeckState] = useState([])
   const [deckDisplay, setDeckDisplay] = useState([])
   const [playerHand, setPlayerHand] = useState([])
   const [handDisplay, setHandDisplay] = useState([])
   const [bestHand, setBestHand] = useState("")
   const [winners,setWinners] = useState([])
+  const [gameState, setGameState] = useState("new")
 
   useEffect(()=>{
     checkKind()
@@ -20,10 +21,6 @@ function App() {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min)
-  }
-  
-  let deck = {
-      cards:[]
   }
 
   class Deck {
@@ -72,6 +69,7 @@ class Card {
 //   console.log(drawCard())
   
   const stackDeck = () => {
+    setGameState("new")
     let cards = []
     let cardNames = []
     while (cards.length < 52) {
@@ -102,23 +100,28 @@ class Card {
   }
 
   const drawHand = () => {
-    let allCards = Array.from(deckState)
-    let cards = []
-    while (cards.length < 7){
-        cards.push(allCards.pop());
+    setGameState("active")
+    if(deckState.length >= 7){
+      let allCards = Array.from(deckState)
+      let cards = []
+      while (cards.length < 7){
+          cards.push(allCards.pop());
+      }
+      setDeckState(allCards)
+  
+      // const display = cards.map((card, key) => (
+        
+      //   <>
+      //     {/* <li key={key}>{card.name()}</li> */}
+      //     <PlayingCard hand={playerHand} card={card}></PlayingCard>
+      //   </>
+      // ))
+      setPlayerHand(cards)
+      // setHandDisplay(display)
+      console.log(cards)
+    } else {
+      setGameState("game over")
     }
-    setDeckState(allCards)
-
-    // const display = cards.map((card, key) => (
-      
-    //   <>
-    //     {/* <li key={key}>{card.name()}</li> */}
-    //     <PlayingCard hand={playerHand} card={card}></PlayingCard>
-    //   </>
-    // ))
-    setPlayerHand(cards)
-    // setHandDisplay(display)
-    console.log(cards)
   }
 
   // <PlayingCard hand={playerHand} card={card}></PlayingCard>
@@ -271,40 +274,29 @@ class Card {
 
   return (
     <div className="App">
-      <h2>One-Hand Shandy</h2>
-      <h4>A single-player poker game by Chris Ailey</h4>
-      <button onClick={() => stackDeck()}>Shuffle</button>
-
-      { deckState ? <button onClick={() => drawHand()}>Draw</button> : <></>}
-      <div className='hand-flex'>
-        {
-          playerHand.map((card, key) => (
-            <PlayingCard winners={winners} card={card}></PlayingCard>
-          ))
-        }
+      <div className='content-flex'>
+        <h2>One-Hand Shandy</h2>
+        <h4>A single-player poker game by Chris Ailey</h4>
+        <button onClick={() => stackDeck()}>Shuffle</button>
+        
+        { deckState.length > 0 && gameState !== "game over" ? <button onClick={() => drawHand()}>Draw</button> : <></>}
+        <div className='hand-flex'>
+          { gameState !== "game over" ?
+            playerHand.map(card => (
+              <PlayingCard winners={winners} card={card}></PlayingCard>
+            )) :
+            <span>Game over. Take your winnings or take the loss, but the chips have fallen where they will.</span>
+          }
+        </div>
+        <h3>Best hand: {bestHand}</h3>
       </div>
-      <h3>Best hand: {bestHand}</h3>
 
-      <div>
+      {/* <div>
         {values.map(card => (
           <div><p style={{color: winners.includes(card.name() ? "#ffffff" : "#000000")}}>{card.name()}</p> <button onClick={() => console.log(winners.includes(card.name()))}></button> </div>
         ))
         }
-      </div>
-
-      {/* <div className='card-flex'>
-        <div className='card-template'>
-          <div className='pips'>
-            { pips.map(pip => (
-              <div className='pip'>
-            
-              </div>
-            ))}
-          </div>
-        </div>
       </div> */}
-      
-      {/* <PlayingCard></PlayingCard> */}
 
     </div>
   );

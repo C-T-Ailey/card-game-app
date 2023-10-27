@@ -1,39 +1,37 @@
+body {
+  background-image: url("../public/images/poker\ bg.png");
+  background-size: cover;
+  font-family: 'Rokkitt', 'Serif';
+  font-weight: bold;
+  font-size:x-large
+}
+
 .App {
   text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
 }
-
-.card-flex {
+/* .card-flex {
   display: flex;
   justify-content: center;
-}
+} */
 
-.card-template {
+/* .card-template {
+  display: flex;
   width: 64px;
   height: 89px;
   background-color: white;
   border: 1px solid black;
   border-radius: 5px;
-}
-
-.pips {
-  height: 89px;
-  width: 64px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  
-}
-
-.pip {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: black;
-}
+} */
 
 .hand-flex {
-  max-width: 1000px;
+  width: 70vw;
   margin:auto;
   margin-top: 20px;
   display: flex;

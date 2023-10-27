@@ -1,12 +1,25 @@
 .card-flex {
     display: flex;
     justify-content: center;
+    font-family: 'Rokkitt', serif;
+    font-weight: bold;
+    font-size: large;
+    color: black;
   }
   
-  .card-template {
+  /* .card-template {
+    display: flex;
     width: 96px;
     height: 134px;
     background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+  } */
+
+  .card-template {
+    display: flex;
+    width: 120px;
+    height: 168px;
     border: 1px solid black;
     border-radius: 5px;
   }
@@ -22,9 +35,13 @@
   } */
 
   .pips {
-    height: 100%;
-    width: 90%;
-    margin: auto;
+    height: 89px;
+    width: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    
   }
   
   .pip {
@@ -32,4 +49,52 @@
     height: 10px;
     border-radius: 50%;
     background-color: black;
+  }
+
+  .container-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    width: 33%;
+  }
+  
+  .container-centre {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 33%;
+  }
+  
+  .container-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    width: 33%;
+  }
+  
+  .suit-corner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .suit-left {
+    position: relative;
+    /* top: 10% */
+  }
+  
+  .suit-centre {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .suit-right {
+    transform: rotateX(180deg) rotateY(180deg);
+    position: relative;
+    /* bottom: 10%; */
   }
