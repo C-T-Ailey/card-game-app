@@ -1,4 +1,9 @@
 import logo from './logo.svg';
+import shuffleChip from './images/shuffle_chip.png'
+import drawChip from './images/draw_chip.png'
+import drawChipInactive from './images/draw_chip_inactive.png'
+import shuffleAudio from './sounds/shuffle.wav'
+import dealAudio from './sounds/deal.wav'
 import './App.css';
 import PlayingCard from './components/PlayingCard'
 import { useEffect, useState } from 'react';
@@ -12,6 +17,9 @@ function App() {
   const [bestHand, setBestHand] = useState("")
   const [winners,setWinners] = useState([])
   const [gameState, setGameState] = useState("new")
+  const [audioSrc, setAudioSrc] = useState("./sounds/shuffle.wav")
+
+  const cardOutlines = [1, 2, 3, 4, 5, 6, 7]
 
   useEffect(()=>{
     checkKind()
@@ -77,6 +85,7 @@ class Card {
   
   const stackDeck = () => {
     setGameState("new")
+    document.getElementById("shuffleAudio").play()
     let cards = []
     let cardNames = []
     while (cards.length < 52) {
@@ -109,22 +118,14 @@ class Card {
   const drawHand = () => {
     setGameState("active")
     if(deckState.length >= 7){
+      document.getElementById("dealAudio").play()
       let allCards = Array.from(deckState)
       let cards = []
       while (cards.length < 7){
-          cards.push(allCards.pop());
+        cards.push(allCards.pop());
       }
       setDeckState(allCards)
-  
-      // const display = cards.map((card, key) => (
-        
-      //   <>
-      //     {/* <li key={key}>{card.name()}</li> */}
-      //     <PlayingCard hand={playerHand} card={card}></PlayingCard>
-      //   </>
-      // ))
       setPlayerHand(cards)
-      // setHandDisplay(display)
       console.log(cards)
     } else {
       setGameState("game over")
@@ -132,7 +133,6 @@ class Card {
     }
   }
 
-  // <PlayingCard hand={playerHand} card={card}></PlayingCard>
 
   let suits = {Clubs: 0, Diamonds: 0, Hearts: 0, Spades: 0}
 
@@ -166,14 +166,6 @@ class Card {
       else if (straightValues[straightValues.length-1] === value-1){
         straightValues.push(value)
       }
-      // if (straightCount === 4 && uniqueValues.indexOf(value) === uniqueValues.length-1){
-      //   straightCount += 1;
-      //   straightValues.push(value)
-      // }
-      // else if(uniqueValues[parseInt(valueIndex)] === value+1){
-      //   straightCount += 1
-      //   straightValues.push(value)
-      // }
 
     })
 
@@ -273,28 +265,46 @@ class Card {
     }
   }
 
-  // stackDeck();
-
-  // drawHand();
-
-  // let values = playerHand.map(card => card.value).sort((a,b) => a - b)
   let values = Array.from(playerHand).sort((a,b) => a.value - b.value)
 
   return (
     <div className="App">
+      <audio id="shuffleAudio" autoPlay={false} src={shuffleAudio}/>
+      <audio id="dealAudio" autoPlay={false} src={dealAudio}/>
       <div className='content-flex'>
-        <h2>One-Hand Shandy</h2>
-        <h4>A single-player poker game by Chris Ailey</h4>
-        <button onClick={() => stackDeck()}>Shuffle</button>
+        <div id='title-area'>
+          <h2>Seven-Card Sloane</h2>
+          <h4>A single-player poker game by Chris Ailey</h4>
+        </div>
+        <img className='chips' src={shuffleChip} alt="shuffle button" draggable="false" onClick={() => stackDeck()}></img>
+        {/* <button onClick={() => stackDeck()}>Shuffle</button> */}
         
-        { deckState.length > 0 && gameState !== "game over" ? <button onClick={() => drawHand()}>Draw</button> : <></>}
-        <div className='hand-flex'>
-          { gameState !== "game over" ?
-            playerHand.map(card => (
-              <PlayingCard winners={winners} card={card}></PlayingCard>
-            )) :
-            <span>Game over. Take your winnings or take the loss, but the chips have fallen where they will.</span>
-          }
+        {/* { deckState.length > 0 && gameState !== "game over" ? <button onClick={() => drawHand()}>Draw</button> : <></>} */}
+        <div className='card-area'>
+          <div className='card-outlines'>
+            {
+              cardOutlines.map(outline => (
+                <div className='card-outline'></div>
+              ))
+            }
+          </div>
+          <div className='hand-flex'>
+              { gameState == "active" ?
+                playerHand.map(card => (
+                  <PlayingCard winners={winners} card={card}></PlayingCard>
+                  )) :
+                  gameState == "game over" ?
+                  <div className='game-over-message'>
+                    <span className='g-o'>Game over!</span><br/><span className='g-o-subline'>Take your winnings or take the loss, but the chips have fallen where they will.</span>
+                  </div>
+                  :
+                  <></>
+              }
+          </div>
+        </div>
+        <div id="draw-chip-area">
+          {/* { deckState.length > 0 && gameState !== "game over" ? <img className='chips' id='draw-chip' src={drawChip} alt="deal button" onClick={() => drawHand()}></img> : <></>} */}
+          <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== "game over" ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== "game over" ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
         <h3>Best hand: {bestHand}</h3>
       </div>
