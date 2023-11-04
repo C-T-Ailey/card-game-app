@@ -11,13 +11,10 @@ import { useEffect, useState } from 'react';
 function App() {
 
   const [deckState, setDeckState] = useState([])
-  // const [deckDisplay, setDeckDisplay] = useState([])
   const [playerHand, setPlayerHand] = useState([])
-  // const [handDisplay, setHandDisplay] = useState([])
   const [bestHand, setBestHand] = useState("")
   const [winners,setWinners] = useState([])
   const [gameState, setGameState] = useState(0)
-  const [audioSrc, setAudioSrc] = useState("./sounds/shuffle.wav")
 
   const cardOutlines = [1, 2, 3, 4, 5, 6, 7]
 
@@ -146,7 +143,6 @@ class Card {
   // Function for drawing a seven-card hand
   const drawHand = () => {
     setGameState(1)
-    // if(deckState.length >= 7){
       document.getElementById("dealAudio").play()
       let allCards = Array.from(deckState)
       let cards = []
@@ -156,10 +152,6 @@ class Card {
       setDeckState(allCards)
       setPlayerHand(cards)
       console.log(cards)
-    // } else {
-    //   setGameState(2)
-    //   reset()
-    // }
   }
 
   const check = () => {
@@ -170,13 +162,6 @@ class Card {
   let suits = {Clubs: 0, Diamonds: 0, Hearts: 0, Spades: 0}
 
   let names = []
-
-  // const checkNonKinds = () => {
-  //   let handCopy = Array.from(playerHand)
-  //   let mapValues = handCopy.map(card => card.value).sort((a,b) => a - b)
-  //   let uniqueValues = [...new Set(mapValues)]
-  //   console.log(uniqueValues)
-  // }
 
   
   let straightValues = []
@@ -213,7 +198,6 @@ class Card {
       console.log("ace high") 
       straightValues.push(0)
       console.log(straightValues)
-      // straightValues.splice(0,1)
     }
     
     if (straightValues.length >= 5) {
@@ -272,14 +256,7 @@ class Card {
       setBestHand(`Full House, ${winningHands["Three of a Kind"]}s over ${winningHands["Pair"]}s `)
       
     }
-    // else if(!!checkFlush() && !!checkStraight()){
-    //   console.log("Straight flush")
-    //     if(straightValues[straightValues.length-1] !== 0){
-    //       setBestHand("Straight Flush")
-    //     } else {
-    //       setBestHand("Royal Flush!")
-    //     }
-    // }
+    
     else if(!!checkFlush()){
       let cardNames = []
       let cardValues = []
@@ -374,9 +351,7 @@ class Card {
           <h4>A single-player poker game by Chris Ailey</h4>
         </div>
         <img className='chips' src={shuffleChip} alt="shuffle button" draggable="false" onClick={() => stackDeck()}></img>
-        {/* <button onClick={() => stackDeck()}>Shuffle</button> */}
         
-        {/* { deckState.length > 0 && gameState !== "game over" ? <button onClick={() => drawHand()}>Draw</button> : <></>} */}
         <div className='card-area'>
           <div className='card-outlines'>
             {
@@ -406,7 +381,6 @@ class Card {
           
         </div>
         <div id="draw-chip-area">
-          {/* { deckState.length > 0 && gameState !== "game over" ? <img className='chips' id='draw-chip' src={drawChip} alt="deal button" onClick={() => drawHand()}></img> : <></>} */}
           <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
         <h3>Best hand: <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>

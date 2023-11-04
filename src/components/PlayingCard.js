@@ -3,14 +3,6 @@ import { BsFillSuitSpadeFill, BsFillSuitHeartFill, BsFillSuitDiamondFill, BsFill
 import './Card.css';
 
 export default function PlayingCard(props) {
-  
-  // useEffect(() => {
-  //   console.log(props.winners)
-  
-  // }, [props.winners])
-  
-
-  // let pips = ["pip","pip","pip","pip","pip"]
 
   const convertValue = () => {
     let value = props.card.value
@@ -38,14 +30,6 @@ export default function PlayingCard(props) {
   }
   
   return (
-    // <div className='card-flex'>
-    //   <div style={{backgroundColor: !!props.winners.includes(props.card.name()) ? "green" : "white"}} className='card-template'>
-    //     <div className='pips'>
-    //       <p>{props.card.name()}</p>
-    //       <p>{props.card.value}</p>
-    //     </div>
-    //   </div>
-    // </div>
     <div className='card-flex'>
         <div style={{background: !!props.winners.includes(props.card.name()) ? "linear-gradient(135deg, rgba(191,149,63,1) 0%, rgba(252,246,186,1) 50%, rgba(179,135,40,1) 100%)" : "linear-gradient(135deg, rgba(191,191,191,1) 0%, rgba(255,255,255,1) 50%, rgba(191,191,191,1) 100%)"}} className='card-template'>
           <div className='container-left'>
