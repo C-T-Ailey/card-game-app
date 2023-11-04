@@ -1,0 +1,12 @@
+.debug-container {
+    position: absolute;
+    right: 0px;
+    height: 100%;
+    width: 15vw;
+    
+}
+
+.debug-buttons {
+    display: flex;
+    flex-direction: column;    
+}

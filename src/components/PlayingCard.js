@@ -1,6 +1,6 @@
 import React from 'react';
 import { BsFillSuitSpadeFill, BsFillSuitHeartFill, BsFillSuitDiamondFill, BsFillSuitClubFill } from 'react-icons/bs'
-import './Card.css';
+import './playingcard.css';
 
 export default function PlayingCard(props) {
 

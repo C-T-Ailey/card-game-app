@@ -6,9 +6,13 @@ import shuffleAudio from './sounds/shuffle.wav'
 import dealAudio from './sounds/deal.wav'
 import './App.css';
 import PlayingCard from './components/PlayingCard'
+import Debug from './components/Debug';
 import { useEffect, useState } from 'react';
+import Betting from './components/Betting';
 
 function App() {
+
+  const debug = false
 
   const [deckState, setDeckState] = useState([])
   const [playerHand, setPlayerHand] = useState([])
@@ -38,66 +42,35 @@ function App() {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
-  class Deck {
-      constructor(cards){
-          this.cards = cards;
+
+  
+  class Card {
+      constructor(suit, rank, value) {
+        this.suit = suit;
+        this.rank = rank;
+        this.value = value;
+      };
+      name() {
+        return `${this.rank} of ${this.suit}`;
       }
-  }
-
-  
-class Card {
-    constructor(suit, rank, value) {
-      this.suit = suit;
-      this.rank = rank;
-      this.value = value;
-    };
-    name() {
-      return `${this.rank} of ${this.suit}`;
     }
-  }
 
-  const royalFlush = [
-    new Card("Diamonds", "Queen", 11), 
-    new Card("Diamonds", "Ten", 9), 
-    new Card("Diamonds", "King", 12), 
-    new Card("Diamonds", "Ace", 0), 
-    new Card("Hearts", "Six", 5), 
-    new Card("Diamonds", "Jack", 10), 
-    new Card("Clubs", "Two", 1)
-  ]
-  
-  const testStraight = [
-    new Card("Clubs", "Two", 1), 
-    new Card("Diamonds", "Three", 2), 
-    new Card("Spades", "Six", 5), 
-    new Card("Diamonds", "Seven", 6), 
-    new Card("Hearts", "Eight", 7), 
-    new Card("Diamonds", "Nine", 8), 
-    new Card("Clubs", "Ten", 9)
-  ]
 
-  const testStraightFlush = [
-    new Card("Clubs", "Two", 1), 
-    new Card("Diamonds", "Three", 2), 
-    new Card("Spades", "Six", 5), 
-    new Card("Spades", "Seven", 6), 
-    new Card("Spades", "Eight", 7), 
-    new Card("Spades", "Nine", 8), 
-    new Card("Spades", "Ten", 9)
-  ]
-
-  const buggedStraight = [
-    new Card("Diamonds", "Three", 2), 
-    new Card("Hearts", "Two", 1), 
-    new Card("Spades", "Five", 4), 
-    new Card("Clubs", "Four", 3), 
-    new Card("Diamonds", "Four", 3), 
-    new Card("Diamonds", "Six", 5), 
-    new Card("Hearts", "Ace", 0)
-  ]
-
-  const cheat = () => {
-    setPlayerHand(buggedStraight)
+  const compareArrays = (arr1, arr2) => {
+    console.log(arr1, arr2)
+    if (arr1.length === arr2.length){
+      const endPoint = arr1.length
+      for (let i = 0; i < endPoint; i++){
+        if (arr1[i] !== arr2[i]){
+          console.log("Arrays do not match.")
+          return false
+        }
+      }
+      return true
+    } else {
+      console.log("Arrays do not match.")
+      return false
+    }
   }
 
   const drawCard = () => {
@@ -163,7 +136,6 @@ class Card {
 
   let names = []
 
-  
   let straightValues = []
   
   const checkStraight = () => {
@@ -173,26 +145,30 @@ class Card {
     console.log(uniqueValues)
     
     uniqueValues.forEach(value => {
-      // index of the next value in the uniqueValues array = the index+1 of value
       let nextValueIndex = uniqueValues.indexOf(value)+1
-      // if straightvalues is empty and the next value in uniqueValues = value + 1
-      if(!straightValues.length && uniqueValues[nextValueIndex] === value+1){
-        straightValues.push(value)
+      if(!!straightValues.length){
+        if(uniqueValues[nextValueIndex] === value+1){
+          straightValues.push(value)
+        }
+        else if (value === uniqueValues[uniqueValues.length-1] && straightValues[straightValues.length-1] === value-1) {
+          straightValues.push(value)
+        } else {
+          straightValues = []
+        }
       }
-      // else if the value at the end of straightvalues = value - 1
-      else if (straightValues[straightValues.length-1] === value-1){
-        straightValues.push(value)
+
+      if(!straightValues.length){
+        if(uniqueValues[nextValueIndex] === value+1){
+          straightValues.push(value)
+        } else {
+          straightValues = []
+        }
       }
-      else {
-        straightValues = []
-      }
+
       
     })
     
     console.log(straightValues)
-    console.log(straightValues[straightValues.length-1])
-    console.log(straightValues[straightValues.length-1] === 12)
-    console.log(uniqueValues.includes(0))
 
     if (straightValues[straightValues.length-1] === 12 && uniqueValues.includes(0)){
       console.log("ace high") 
@@ -201,27 +177,31 @@ class Card {
     }
     
     if (straightValues.length >= 5) {
-      console.log("Straight!", straightValues)
-      return true
+      straightValues.splice(0,straightValues.length-5)
+      if ((straightValues[4] === straightValues[0] + 4) || (straightValues[3] === 12 && straightValues[4] === 0)){
+        console.log("Straight!", straightValues)
+        return true
+      }
     } else {
       return false
     }
   }
+
+  let flushSuit = ""
   
   const checkFlush = () => {
     for (const suit in suits) {
       const element = suits[suit];
       if (element >= 5){
         console.log("Flush!")
+        flushSuit = suit
         return `${suit} Flush`
       }
-      
     }
   }
   
   const checkKind = () => {
     let handCopy = Array.from(playerHand)
-    let pairs = [] 
     let winningHands = {}
     
     handCopy.forEach(card => {
@@ -258,29 +238,26 @@ class Card {
     }
     
     else if(!!checkFlush()){
-      let cardNames = []
-      let cardValues = []
-      playerHand.forEach(card => {
-        if(suits[card.suit] >= 5){
-          cardNames.push(card.name())
-          cardValues.push(card.value)
-        }
-      });
-      console.log(cardNames)
-      console.log(cardValues)
-      if(cardNames.length > 5){
-        console.log(Math.min(cardValues))
-        cardNames.splice(cardNames.indexOf(Math.min(cardValues)),1)
-      }
+      
+      let flushHand = Array.from(playerHand).filter(card => card.suit === flushSuit).sort((a,b) => a.value - b.value)
+      console.log(flushHand)
+
+      let cardNames = flushHand.map(card => card.name()).splice(flushHand.length-5, 5)
+      let cardValues = flushHand.map(card => card.value).splice(flushHand.length-5, 5)
+      const royalValues = [0,9,10,11,12]
+      
+      let sortedValues = cardValues.sort((a,b) => (a - b))
+      console.log("names",cardNames)
+      console.log("values",cardValues)
       setWinners(cardNames)
 
-      if(checkStraight()){
-        console.log("Straight flush")
-        if(straightValues[straightValues.length-1] !== 0){
-          setBestHand("Straight Flush")
-        } else {
-          setBestHand("Royal Flush!")
-        }
+      console.log(sortedValues)
+
+      if (compareArrays(sortedValues,royalValues)) {
+        setBestHand("Royal Flush!")
+      }
+      else if (checkStraight() && compareArrays(sortedValues, straightValues)){
+        setBestHand("Straight Flush")
       } else {
         setBestHand(checkFlush())
       }
@@ -349,6 +326,7 @@ class Card {
         <div id='title-area'>
           <h2>Seven-Card Sloane</h2>
           <h4>A single-player poker game by Chris Ailey</h4>
+          {/* <h4>Bug reminders go here</h4> */}
         </div>
         <img className='chips' src={shuffleChip} alt="shuffle button" draggable="false" onClick={() => stackDeck()}></img>
         
@@ -362,10 +340,10 @@ class Card {
           </div>
           <div className='hand-flex'>
               { playerHand.length ?
-                playerHand.map(card => (
-                  <PlayingCard winners={winners} card={card}></PlayingCard>
-                  )) :
-                  <></>
+                  playerHand.map(card => (
+                    <PlayingCard winners={winners} card={card}></PlayingCard>
+                    )) :
+                    <></>
               }
           </div>
           
@@ -377,16 +355,22 @@ class Card {
                   </div>
                   :
                   <></>
-                }
+              }
           
         </div>
         <div id="draw-chip-area">
           <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
         <h3>Best hand: <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
+        <Betting/>
       </div>
 
-      {/* <div><button onClick={() => cheat()}>Cheat</button></div> */}
+
+      { debug===true ?
+        <Debug Card={Card} setPlayerHand={setPlayerHand}/>
+        :
+        <></>
+      }
 
     </div>
   );
