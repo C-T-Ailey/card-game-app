@@ -11,31 +11,34 @@ import { useEffect, useState } from 'react';
 function App() {
 
   const [deckState, setDeckState] = useState([])
-  const [deckDisplay, setDeckDisplay] = useState([])
+  // const [deckDisplay, setDeckDisplay] = useState([])
   const [playerHand, setPlayerHand] = useState([])
-  const [handDisplay, setHandDisplay] = useState([])
+  // const [handDisplay, setHandDisplay] = useState([])
   const [bestHand, setBestHand] = useState("")
   const [winners,setWinners] = useState([])
-  const [gameState, setGameState] = useState("new")
+  const [gameState, setGameState] = useState(0)
   const [audioSrc, setAudioSrc] = useState("./sounds/shuffle.wav")
 
   const cardOutlines = [1, 2, 3, 4, 5, 6, 7]
+
+  const suitNames = ["Clubs","Diamonds","Hearts","Spades"]
+  const rankNames = ["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King"]
 
   useEffect(()=>{
     checkKind()
   },[playerHand])
 
+  useEffect(()=>{
+    if( gameState === 1 && deckState.length < 7){
+      setGameState(2);
+      setDeckState([])
+    }
+  },[deckState])
+
   const randInt = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min)
-  }
-
-  const reset = () => {
-    setDeckState([])
-    setDeckDisplay([])
-    setPlayerHand([])
-    setHandDisplay([])
   }
 
   class Deck {
@@ -44,13 +47,6 @@ function App() {
       }
   }
 
-  let testDeck = new Deck([])
-
-  // console.log(testDeck.cards)
-
-  let hand = {
-      cards:[]
-  }
   
 class Card {
     constructor(suit, rank, value) {
@@ -62,62 +58,95 @@ class Card {
       return `${this.rank} of ${this.suit}`;
     }
   }
+
+  const royalFlush = [
+    new Card("Diamonds", "Queen", 11), 
+    new Card("Diamonds", "Ten", 9), 
+    new Card("Diamonds", "King", 12), 
+    new Card("Diamonds", "Ace", 0), 
+    new Card("Hearts", "Six", 5), 
+    new Card("Diamonds", "Jack", 10), 
+    new Card("Clubs", "Two", 1)
+  ]
   
+  const testStraight = [
+    new Card("Clubs", "Two", 1), 
+    new Card("Diamonds", "Three", 2), 
+    new Card("Spades", "Six", 5), 
+    new Card("Diamonds", "Seven", 6), 
+    new Card("Hearts", "Eight", 7), 
+    new Card("Diamonds", "Nine", 8), 
+    new Card("Clubs", "Ten", 9)
+  ]
+
+  const testStraightFlush = [
+    new Card("Clubs", "Two", 1), 
+    new Card("Diamonds", "Three", 2), 
+    new Card("Spades", "Six", 5), 
+    new Card("Spades", "Seven", 6), 
+    new Card("Spades", "Eight", 7), 
+    new Card("Spades", "Nine", 8), 
+    new Card("Spades", "Ten", 9)
+  ]
+
+  const buggedStraight = [
+    new Card("Diamonds", "Three", 2), 
+    new Card("Hearts", "Two", 1), 
+    new Card("Spades", "Five", 4), 
+    new Card("Clubs", "Four", 3), 
+    new Card("Diamonds", "Four", 3), 
+    new Card("Diamonds", "Six", 5), 
+    new Card("Hearts", "Ace", 0)
+  ]
+
+  const cheat = () => {
+    setPlayerHand(buggedStraight)
+  }
+
   const drawCard = () => {
-    const suits = ["Clubs","Diamonds","Hearts","Spades"]
-    const ranks = ["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King"]
+
     let value = 0
     
     const chooseSuit = () => {
-      return suits[randInt(0,3)]
+      return suitNames[randInt(0,3)]
     }
     const chooseRank = () => {
       const rank = randInt(0,12)
       value = rank
-      return ranks[rank]
+      return rankNames[rank]
     }
     
     const card = new Card(chooseSuit(), chooseRank(), value)
     return card
   }
   
-//   console.log(drawCard())
-  
+  // Function for building the deck
   const stackDeck = () => {
-    setGameState("new")
+
+    setPlayerHand([])
+
+    setGameState(0)
     document.getElementById("shuffleAudio").play()
     let cards = []
     let cardNames = []
+
     while (cards.length < 52) {
         const newCard = drawCard();
-        // console.log(cardNames.length,cardNames.includes(newCard.name()));
+
         if (!cardNames.includes(newCard.name())){
             cards.push(newCard);
             cardNames.push(newCard.name());
         }
     }
-    // for (i = 0; i < 53; i++){
-    //     const newCard = drawCard()
-    //     console.log(cardNames.length,cardNames.includes(newCard.name()))
-    //     if (!cardNames.includes(newCard.name())){
-    //         cards.push(newCard)
-    //         cardNames.push(newCard.name())
-    //     }
-    // }
-    // testDeck.cards = cards
+    
     console.log(cards)
-    const clearCards = cards.map((card, key) => (
-      
-      <li>{card.rank} of {card.suit}</li>
-      
-    ))
     setDeckState(cards)
-    setDeckDisplay(clearCards)
   }
 
+  // Function for drawing a seven-card hand
   const drawHand = () => {
-    setGameState("active")
-    if(deckState.length >= 7){
+    setGameState(1)
+    // if(deckState.length >= 7){
       document.getElementById("dealAudio").play()
       let allCards = Array.from(deckState)
       let cards = []
@@ -127,48 +156,66 @@ class Card {
       setDeckState(allCards)
       setPlayerHand(cards)
       console.log(cards)
-    } else {
-      setGameState("game over")
-      reset()
-    }
+    // } else {
+    //   setGameState(2)
+    //   reset()
+    // }
   }
 
+  const check = () => {
+    console.log(checkStraight());
+    console.log(checkFlush())
+  }
 
   let suits = {Clubs: 0, Diamonds: 0, Hearts: 0, Spades: 0}
 
   let names = []
 
-  const checkFlush = () => {
-    for (const suit in suits) {
-      const element = suits[suit];
-      if (element >= 5){
-        console.log("Flush!")
-        return `${suit} Flush`
-        // setBestHand(`${suit} Flush`)
-      }
-      
-    }
-  }
+  // const checkNonKinds = () => {
+  //   let handCopy = Array.from(playerHand)
+  //   let mapValues = handCopy.map(card => card.value).sort((a,b) => a - b)
+  //   let uniqueValues = [...new Set(mapValues)]
+  //   console.log(uniqueValues)
+  // }
 
+  
   let straightValues = []
-
+  
   const checkStraight = () => {
     let handCopy = Array.from(playerHand)
     let mapValues = handCopy.map(card => card.value).sort((a,b) => a - b)
     let uniqueValues = [...new Set(mapValues)]
     console.log(uniqueValues)
-    let straightCount = 0
+    
     uniqueValues.forEach(value => {
+      // index of the next value in the uniqueValues array = the index+1 of value
       let nextValueIndex = uniqueValues.indexOf(value)+1
+      // if straightvalues is empty and the next value in uniqueValues = value + 1
       if(!straightValues.length && uniqueValues[nextValueIndex] === value+1){
         straightValues.push(value)
       }
+      // else if the value at the end of straightvalues = value - 1
       else if (straightValues[straightValues.length-1] === value-1){
         straightValues.push(value)
       }
-
+      else {
+        straightValues = []
+      }
+      
     })
+    
+    console.log(straightValues)
+    console.log(straightValues[straightValues.length-1])
+    console.log(straightValues[straightValues.length-1] === 12)
+    console.log(uniqueValues.includes(0))
 
+    if (straightValues[straightValues.length-1] === 12 && uniqueValues.includes(0)){
+      console.log("ace high") 
+      straightValues.push(0)
+      console.log(straightValues)
+      // straightValues.splice(0,1)
+    }
+    
     if (straightValues.length >= 5) {
       console.log("Straight!", straightValues)
       return true
@@ -176,7 +223,17 @@ class Card {
       return false
     }
   }
-    
+  
+  const checkFlush = () => {
+    for (const suit in suits) {
+      const element = suits[suit];
+      if (element >= 5){
+        console.log("Flush!")
+        return `${suit} Flush`
+      }
+      
+    }
+  }
   
   const checkKind = () => {
     let handCopy = Array.from(playerHand)
@@ -206,7 +263,6 @@ class Card {
     console.log(winningHands)
     console.log(names)
     setWinners(names)
-    
 
     if (Object.keys(winningHands).includes("Four of a Kind")){
       setBestHand("Four of a Kind")
@@ -216,26 +272,66 @@ class Card {
       setBestHand(`Full House, ${winningHands["Three of a Kind"]}s over ${winningHands["Pair"]}s `)
       
     }
+    // else if(!!checkFlush() && !!checkStraight()){
+    //   console.log("Straight flush")
+    //     if(straightValues[straightValues.length-1] !== 0){
+    //       setBestHand("Straight Flush")
+    //     } else {
+    //       setBestHand("Royal Flush!")
+    //     }
+    // }
     else if(!!checkFlush()){
       let cardNames = []
+      let cardValues = []
       playerHand.forEach(card => {
         if(suits[card.suit] >= 5){
           cardNames.push(card.name())
+          cardValues.push(card.value)
         }
       });
+      console.log(cardNames)
+      console.log(cardValues)
+      if(cardNames.length > 5){
+        console.log(Math.min(cardValues))
+        cardNames.splice(cardNames.indexOf(Math.min(cardValues)),1)
+      }
       setWinners(cardNames)
-      setBestHand(checkFlush())
+
+      if(checkStraight()){
+        console.log("Straight flush")
+        if(straightValues[straightValues.length-1] !== 0){
+          setBestHand("Straight Flush")
+        } else {
+          setBestHand("Royal Flush!")
+        }
+      } else {
+        setBestHand(checkFlush())
+      }
     }
+
     else if (checkStraight()) {
+      let undupeCards = []
       let cardNames = []
       console.log("values", straightValues)
-      playerHand.forEach(card => {
-        if (straightValues.includes(card.value)){
-          cardNames.push(card.name())
+      if (straightValues.length > 5){
+        let valuesDownToFive = Array.from(straightValues).slice(-5, straightValues.length)
+        playerHand.forEach(card => {
+          if (!undupeCards.includes(card.rank) && valuesDownToFive.includes(card.value)){
+            cardNames.push(card.name())
+            undupeCards.push(card.rank)
+          }
+        })
+      } else {
+        playerHand.forEach(card => {
+          if (!undupeCards.includes(card.rank) && straightValues.includes(card.value)){
+            cardNames.push(card.name())
+            undupeCards.push(card.rank)
         }
       })
+      }
+      console.log(cardNames)
       setWinners(cardNames)
-      setBestHand("Straight")
+      setBestHand( `${rankNames[straightValues[straightValues.length - 1]]}-High Straight`)
     }
     else if (Object.keys(winningHands).includes("Three of a Kind")) {
     setBestHand("Three of a Kind")
@@ -244,21 +340,22 @@ class Card {
       if (Object.keys(names).length === 2){
         setBestHand("One Pair")
       }
-      else if (Object.keys(names).length > 4) {
+      else if (Object.keys(names).length >= 4) {
         let pairValues = playerHand.filter(winningCard => names.includes(winningCard.name())).map(winningCard => winningCard.value)
         console.log(pairValues)
         console.log("Values =", Math.min(...pairValues))
         playerHand.forEach(card => {
           console.log("check:",card.value === Math.min(...pairValues))
           if (card.value === Math.min(...pairValues)) {
-            names = names.splice(names.indexOf(card.name()), 1)
+            // names = names.splice(names.indexOf(card.name()), 1)
             console.log(names)
           }
         })
-        setBestHand("Two Pair: THREE PAIR SPECIAL")
-      } else {
-        setBestHand("Two Pair")
-      }
+        setBestHand(names.length === 4 ? "Two Pair" : "Two Pair (Three Pair Special)")
+      } 
+      // else {
+      //   setBestHand("Two Pair")
+      // }
     }
     else if (!winningHands.length){
       setBestHand("No winning hand")
@@ -289,32 +386,33 @@ class Card {
             }
           </div>
           <div className='hand-flex'>
-              { gameState == "active" ?
+              { playerHand.length ?
                 playerHand.map(card => (
                   <PlayingCard winners={winners} card={card}></PlayingCard>
                   )) :
-                  gameState == "game over" ?
-                  <div className='game-over-message'>
-                    <span className='g-o'>Game over!</span><br/><span className='g-o-subline'>Take your winnings or take the loss, but the chips have fallen where they will.</span>
-                  </div>
-                  :
                   <></>
               }
           </div>
+          
+              { gameState === 2 ?
+                  <div className='game-over-container'>
+                    <div className='game-over-message'>
+                      <span className='g-o'>Game over!</span><br/><span className='g-o-subline'>Take your winnings or take the loss, but the chips have fallen where they will.</span>
+                    </div>
+                  </div>
+                  :
+                  <></>
+                }
+          
         </div>
         <div id="draw-chip-area">
           {/* { deckState.length > 0 && gameState !== "game over" ? <img className='chips' id='draw-chip' src={drawChip} alt="deal button" onClick={() => drawHand()}></img> : <></>} */}
-          <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== "game over" ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== "game over" ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
+          <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
-        <h3>Best hand: {bestHand}</h3>
+        <h3>Best hand: <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
       </div>
 
-      {/* <div>
-        {values.map(card => (
-          <div><p style={{color: winners.includes(card.name() ? "#ffffff" : "#000000")}}>{card.name()}</p> <button onClick={() => console.log(winners.includes(card.name()))}></button> </div>
-        ))
-        }
-      </div> */}
+      {/* <div><button onClick={() => cheat()}>Cheat</button></div> */}
 
     </div>
   );

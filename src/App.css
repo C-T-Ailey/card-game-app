@@ -75,34 +75,67 @@ body {
   justify-content: space-evenly;
 }
 
-.game-over-message {
+.game-over-container {
+  position: absolute;
+  width: 70vw;
+  height: 168px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+.game-over-message {
+  /* position: absolute;
+  top: 20%;
+  left: 16%;
+  z-index: 3; */
+  user-select: none;
 }
 
 .g-o {
   font-size: 3rem;
-  text-shadow:
-    -3px -3px 0 #000,  
-    3px -3px 0 #000,
-    -3px 3px 0 #000,
-    3px 3px 0 #000;
+  text-shadow: 3px 3px 1px #000, 3px -3px 1px #000, -3px 3px 1px #000, -3px -3px 1px #000, 3px 0px 1px #000, 0px 3px 1px #000, -3px 0px 1px #000, 0px -3px 1px #000;
 }
 
 .g-o-subline {
   font-size: 1.75rem;
-  text-shadow:
-    -3px -3px 0 #000,  
-    3px -3px 0 #000,
-    -3px 3px 0 #000,
-    3px 3px 0 #000;
+  text-shadow: 3px 3px 1px #000, 3px -3px 1px #000, -3px 3px 1px #000, -3px -3px 1px #000, 3px 0px 1px #000, 0px 3px 1px #000, -3px 0px 1px #000, 0px -3px 1px #000;
 }
 
 .card-outline {
   display: flex;
   width: 120px;
   height: 168px;
-  margin: -2px;
-  border: 3px solid rgb(255, 255, 255);
+  margin: -4px;
+  border: 5px solid rgb(255, 255, 255);
   border-radius: 5px;
+  border-style: dashed;
+  opacity: 0.7;
+}
+
+.royal-flush {
+  --bg-size: 400%;
+  --color-one: rgba(191,149,63,1);
+  --color-two: rgba(252,246,186,1);
+  background: linear-gradient(
+      90deg,
+      var(--color-one),
+      var(--color-two),
+      var(--color-one)
+    )
+    0 0 / var(--bg-size) 100%;
+  color: transparent;
+  background-clip: text;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .royal-flush {
+    animation: move-bg 5s linear infinite;
+  }
+  @keyframes move-bg {
+    to {
+      background-position: var(--bg-size) 0;
+    }
+  }
 }
