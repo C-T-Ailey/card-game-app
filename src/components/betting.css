@@ -5,11 +5,19 @@
     align-items: center;
 }
 
-.count-container {
 
+.betting-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.bet-buttons {
+.best-hand-buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.bet-amount-buttons {
     display: flex;
     justify-content: space-between;
     width: 10vw;

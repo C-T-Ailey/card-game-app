@@ -19,6 +19,9 @@ function App() {
   const [bestHand, setBestHand] = useState("")
   const [winners,setWinners] = useState([])
   const [gameState, setGameState] = useState(0)
+  const [handBet, setHandBet] = useState("unset")
+  const [gameBet, setGameBet] = useState()
+  const [gameHands, setGameHands] = useState([])
 
   const cardOutlines = [1, 2, 3, 4, 5, 6, 7]
 
@@ -36,13 +39,33 @@ function App() {
     }
   },[deckState])
 
+  useEffect(()=>{
+    if(bestHandCleanup() === false) {
+      setGameHands([...gameHands, bestHand])
+    } else {
+      setGameHands([...gameHands, bestHandCleanup()])
+    }
+  },[bestHand])
+
   const randInt = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
-
+  const bestHandCleanup = () => {
+    if (bestHand.slice(bestHand.length-8,bestHand.length) === "Straight"){
+      return "Straight"
+    }
+    else if (bestHand.slice(bestHand.length-5,bestHand.length) === "Flush"){
+      return "Flush"
+    }
+    else if (bestHand.slice(bestHand.length-1) === ")"){
+      return "Two Pair"
+    } else {
+      return false
+    }
+  }
   
   class Card {
       constructor(suit, rank, value) {
@@ -328,7 +351,7 @@ function App() {
           <h4>A single-player poker game by Chris Ailey</h4>
           {/* <h4>Bug reminders go here</h4> */}
         </div>
-        <img className='chips' src={shuffleChip} alt="shuffle button" draggable="false" onClick={() => stackDeck()}></img>
+        <img className='chips' style={handBet === "unset" ? {opacity: "0.5"} : {}} src={shuffleChip} alt="shuffle button" draggable="false" onClick={handBet === "unset" ? () => console.log("Cannot start game without setting a bet") : () => stackDeck()}></img>
         
         <div className='card-area'>
           <div className='card-outlines'>
@@ -362,7 +385,7 @@ function App() {
           <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
         <h3>Best hand: <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
-        <Betting/>
+        <Betting gameState={gameState} bestHand={bestHand} handBet={handBet} setHandBet={setHandBet} gameBet={gameBet} setGameBet={setGameBet} gameHands={gameHands}/>
       </div>
 
 
