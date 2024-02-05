@@ -1,7 +1,7 @@
 import React from 'react'
 import "./debug.css"
 
-export default function debug(props) {
+export default function Debug(props) {
     const Card = props.Card
 
     const royalFlush = [

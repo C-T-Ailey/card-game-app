@@ -75,6 +75,24 @@ body {
   justify-content: space-evenly;
 }
 
+#test-hand {
+  width: 20em;
+  height: 10em;
+  position: absolute;
+  right: 0px;
+  top: 200px;
+}
+
+#card-one {
+  display: inline-block;
+  transform: rotate(-10deg)
+}
+
+#card-two {
+  display: inline-block;
+  transform: rotate(5deg) translate(-40px, 5px)
+}
+
 .game-over-container {
   position: absolute;
   width: 70vw;
@@ -137,5 +155,13 @@ body {
     to {
       background-position: var(--bg-size) 0;
     }
+  }
+
+  #card-animate {
+    animation: flip-card 1.5s linear 1 forwards;
+
+  }
+  @keyframes flip-card {
+    
   }
 }

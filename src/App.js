@@ -7,6 +7,7 @@ import dealAudio from './sounds/deal.wav'
 import './App.css';
 import PlayingCard from './components/PlayingCard'
 import Debug from './components/Debug';
+import Help from './components/Help';
 import { useEffect, useState } from 'react';
 import Betting from './components/Betting';
 
@@ -18,7 +19,7 @@ function App() {
   const [playerHand, setPlayerHand] = useState([])
   const [bestHand, setBestHand] = useState("")
   const [winners,setWinners] = useState([])
-  const [gameState, setGameState] = useState(0)
+  const [gameState, setGameState] = useState(0)    // 0 = inactive game, 1 = game in progress, 2 = game over
   const [handBet, setHandBet] = useState("unset")
   const [gameBet, setGameBet] = useState()
   const [gameHands, setGameHands] = useState([])
@@ -28,10 +29,12 @@ function App() {
   const suitNames = ["Clubs","Diamonds","Hearts","Spades"]
   const rankNames = ["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King"]
 
+  // use effect hook: run checkKind every time the playerHand updates
   useEffect(()=>{
     checkKind()
   },[playerHand])
 
+  // use effect hook: whenever deckState updates, if gameState = 1 (active) and deck length is less than 7, set gameState = 2 (game over) and reset deckState
   useEffect(()=>{
     if( gameState === 1 && deckState.length < 7){
       setGameState(2);
@@ -39,6 +42,7 @@ function App() {
     }
   },[deckState])
 
+  // use effect hook: whenever bestHand updates, add the bestHand value to the gameHands array -- otherwise, run bestHandCleanup and add the cleaned up bestHand to gameHands
   useEffect(()=>{
     if(bestHandCleanup() === false) {
       setGameHands([...gameHands, bestHand])
@@ -47,12 +51,14 @@ function App() {
     }
   },[bestHand])
 
+  // returns a random integer between min and max values
   const randInt = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
+  // Function for returning clean hand names from hands with long variations, e.g. ace-high straight, clubs flush, two pair (three card special)
   const bestHandCleanup = () => {
     if (bestHand.slice(bestHand.length-8,bestHand.length) === "Straight"){
       return "Straight"
@@ -67,6 +73,7 @@ function App() {
     }
   }
   
+  // class constructor for each Card object
   class Card {
       constructor(suit, rank, value) {
         this.suit = suit;
@@ -78,7 +85,15 @@ function App() {
       }
     }
 
+  // TEST CARDS
 
+  // const testCardOne = new Card("Clubs", "Ace", 0)
+
+  // const testCardTwo = new Card("Spades", "Eight", 7)
+
+  // END TEST CARDS
+
+  // 
   const compareArrays = (arr1, arr2) => {
     console.log(arr1, arr2)
     if (arr1.length === arr2.length){
@@ -96,6 +111,7 @@ function App() {
     }
   }
 
+  // Generates a single card as part of stackDeck
   const drawCard = () => {
 
     let value = 0
@@ -138,7 +154,7 @@ function App() {
 
   // Function for drawing a seven-card hand
   const drawHand = () => {
-    setGameState(1)
+      setGameState(1)
       document.getElementById("dealAudio").play()
       let allCards = Array.from(deckState)
       let cards = []
@@ -150,11 +166,6 @@ function App() {
       console.log(cards)
   }
 
-  const check = () => {
-    console.log(checkStraight());
-    console.log(checkFlush())
-  }
-
   let suits = {Clubs: 0, Diamonds: 0, Hearts: 0, Spades: 0}
 
   let names = []
@@ -162,14 +173,20 @@ function App() {
   let straightValues = []
   
   const checkStraight = () => {
-    let handCopy = Array.from(playerHand)
-    let mapValues = handCopy.map(card => card.value).sort((a,b) => a - b)
-    let uniqueValues = [...new Set(mapValues)]
+
+    let handCopy = Array.from(playerHand)  // copy of player's hand
+
+    let mapValues = handCopy.map(card => card.value).sort((a,b) => a - b)  // map the values of each card in hand's value, sorted from low-high
+
+    let uniqueValues = [...new Set(mapValues)]  // all unique values from mapValues
+
     console.log(uniqueValues)
     
     uniqueValues.forEach(value => {
+
       let nextValueIndex = uniqueValues.indexOf(value)+1
-      if(!!straightValues.length){
+      
+      if(!!straightValues.length){  // if straightValues is populated
         if(uniqueValues[nextValueIndex] === value+1){
           straightValues.push(value)
         }
@@ -180,7 +197,7 @@ function App() {
         }
       }
 
-      if(!straightValues.length){
+      if(!straightValues.length){  // if straightValues is unpopulated
         if(uniqueValues[nextValueIndex] === value+1){
           straightValues.push(value)
         } else {
@@ -364,11 +381,20 @@ function App() {
           <div className='hand-flex'>
               { playerHand.length ?
                   playerHand.map(card => (
-                    <PlayingCard winners={winners} card={card}></PlayingCard>
+                    <PlayingCard  winners={winners} card={card}></PlayingCard>
                     )) :
                     <></>
               }
           </div>
+
+          {/* <div id="test-hand">
+              <div id="card-one">
+                <PlayingCard winners={winners} card={testCardOne} />
+              </div>
+              <div id="card-two">
+                <PlayingCard winners={winners} card={testCardTwo} />
+              </div>
+          </div> */}
           
               { gameState === 2 ?
                   <div className='game-over-container'>
@@ -384,8 +410,11 @@ function App() {
         <div id="draw-chip-area">
           <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
-        <h3>Best hand: <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
-        <Betting gameState={gameState} bestHand={bestHand} handBet={handBet} setHandBet={setHandBet} gameBet={gameBet} setGameBet={setGameBet} gameHands={gameHands}/>
+        <h3>Best hand : <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
+        <div>
+          <div>Bet On : {handBet === "unset" ? "No Bet" : handBet}</div>
+          <Betting gameState={gameState} bestHand={bestHand} handBet={handBet} setHandBet={setHandBet} gameBet={gameBet} setGameBet={setGameBet} gameHands={gameHands}/>
+        </div>
       </div>
 
 
@@ -394,6 +423,8 @@ function App() {
         :
         <></>
       }
+
+      <Help></Help>
 
     </div>
   );
