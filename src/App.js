@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import shuffleChip from './images/shuffle_chip.png'
 import drawChip from './images/draw_chip.png'
+import helpChip from './images/help_chip.png'
 import drawChipInactive from './images/draw_chip_inactive.png'
 import shuffleAudio from './sounds/shuffle.wav'
 import dealAudio from './sounds/deal.wav'
@@ -23,6 +24,7 @@ function App() {
   const [handBet, setHandBet] = useState("unset")
   const [gameBet, setGameBet] = useState()
   const [gameHands, setGameHands] = useState([])
+  const [showHelp, setShowHelp] = useState(false)
 
   const cardOutlines = [1, 2, 3, 4, 5, 6, 7]
 
@@ -51,6 +53,22 @@ function App() {
     }
   },[bestHand])
 
+  // class constructor for each Card object
+  class Card {
+      constructor(suit, rank, value) {
+        this.suit = suit;
+        this.rank = rank;
+        this.value = value;
+      };
+      name() {
+        return `${this.rank} of ${this.suit}`;
+      }
+  }
+
+  const displayHelp = () => {
+    setShowHelp(true)
+  }
+    
   // returns a random integer between min and max values
   const randInt = (min, max) => {
     min = Math.ceil(min);
@@ -73,17 +91,6 @@ function App() {
     }
   }
   
-  // class constructor for each Card object
-  class Card {
-      constructor(suit, rank, value) {
-        this.suit = suit;
-        this.rank = rank;
-        this.value = value;
-      };
-      name() {
-        return `${this.rank} of ${this.suit}`;
-      }
-    }
 
   // TEST CARDS
 
@@ -362,21 +369,28 @@ function App() {
     <div className="App">
       <audio id="shuffleAudio" autoPlay={false} src={shuffleAudio}/>
       <audio id="dealAudio" autoPlay={false} src={dealAudio}/>
+      <div>
+      <img className='helpChip' src={helpChip} alt="shuffle button" draggable="false" onClick={() => displayHelp()}></img>
+      </div>
       <div className='content-flex'>
         <div id='title-area'>
-          <h2>Seven-Card Sloane</h2>
-          <h4>A single-player poker game by Chris Ailey</h4>
+          <h2 className='title' style={{fontSize: "2.5rem"}}>Seven-Card Sloane</h2>
+          <h4 className='title'>A single-player poker game by Chris Ailey</h4>
           {/* <h4>Bug reminders go here</h4> */}
         </div>
-        <img className='chips' style={handBet === "unset" ? {opacity: "0.5"} : {}} src={shuffleChip} alt="shuffle button" draggable="false" onClick={handBet === "unset" ? () => console.log("Cannot start game without setting a bet") : () => stackDeck()}></img>
+        
+        <div className='betting-module'>
+          {/* <div className='bet-on'>Bet On : {handBet === "unset" ? "No Bet" : handBet}</div> */}
+          <Betting gameState={gameState} bestHand={bestHand} handBet={handBet} setHandBet={setHandBet} gameBet={gameBet} setGameBet={setGameBet} gameHands={gameHands}/>
+        </div>
         
         <div className='card-area'>
           <div className='card-outlines'>
             {
               cardOutlines.map(outline => (
                 <div className='card-outline'></div>
-              ))
-            }
+                ))
+              }
           </div>
           <div className='hand-flex'>
               { playerHand.length ?
@@ -384,37 +398,29 @@ function App() {
                     <PlayingCard  winners={winners} card={card}></PlayingCard>
                     )) :
                     <></>
-              }
+                  }
           </div>
-
-          {/* <div id="test-hand">
-              <div id="card-one">
-                <PlayingCard winners={winners} card={testCardOne} />
-              </div>
-              <div id="card-two">
-                <PlayingCard winners={winners} card={testCardTwo} />
-              </div>
-          </div> */}
           
               { gameState === 2 ?
                   <div className='game-over-container'>
                     <div className='game-over-message'>
-                      <span className='g-o'>Game over!</span><br/><span className='g-o-subline'>Take your winnings or take the loss, but the chips have fallen where they will.</span>
+                      <span className='g-o'>Game over!</span>
+                      <br/>
+                      <span className='g-o-subline'>The chips have fallen where they will.</span>
+                      <br/>
+                      <span className='g-o-subline'>Place a new bet to start again.</span>
                     </div>
                   </div>
                   :
                   <></>
-              }
+                }
           
         </div>
         <div id="draw-chip-area">
+          <img className='chips' style={handBet === "unset" ? {opacity: "0.5"} : {}} src={shuffleChip} alt="shuffle button" draggable="false" onClick={handBet === "unset" ? () => console.log("Cannot start game without setting a bet") : () => stackDeck()}></img>
           <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
-        <h3>Best hand : <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
-        <div>
-          <div>Bet On : {handBet === "unset" ? "No Bet" : handBet}</div>
-          <Betting gameState={gameState} bestHand={bestHand} handBet={handBet} setHandBet={setHandBet} gameBet={gameBet} setGameBet={setGameBet} gameHands={gameHands}/>
-        </div>
+        <h3>Current hand : <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
       </div>
 
 
@@ -424,7 +430,7 @@ function App() {
         <></>
       }
 
-      <Help></Help>
+      <Help showHelp={showHelp} setShowHelp={setShowHelp}></Help>
 
     </div>
   );
