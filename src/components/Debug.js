@@ -94,6 +94,26 @@ export default function Debug(props) {
         new Card("Clubs", "Nine", 8)
       ]
 
+      const twoPairFullHouse = [
+        new Card("Spades", "Ten", 9), 
+        new Card("Hearts", "Five", 4), 
+        new Card("Clubs", "Ten", 9), 
+        new Card("Spades", "Ten", 9), 
+        new Card("Hearts", "Jack", 10), 
+        new Card("Diamonds", "Jack", 10), 
+        new Card("Clubs", "Five", 4)
+      ]
+
+      const fullHouseSixes = [
+        new Card("Spades", "Six", 5), 
+        new Card("Hearts", "Eight", 7), 
+        new Card("Clubs", "Six", 5), 
+        new Card("Spades", "Three", 2), 
+        new Card("Hearts", "Six", 5), 
+        new Card("Diamonds", "Eight", 7), 
+        new Card("Clubs", "Five", 4)
+      ]
+
     const cheat = (hand) => {
         props.setPlayerHand(hand)
     }
@@ -113,6 +133,10 @@ export default function Debug(props) {
             <button onClick={() => cheat(heartsFlush)}>Hearts Flush</button>
             <button onClick={() => cheat(aceStraight)}>Ace-High Straight</button>
             <button onClick={() => cheat(highDupeStraight)}>High Straight w/ dupes</button>
+            <button onClick={() => cheat(twoPairFullHouse)}>Full House w/ two pair</button>
+            <button onClick={() => cheat(fullHouseSixes)}>Full House w/ Sixes</button>
+            <button onClick={() => console.log(props.gameHands)}>Log gameHands</button>
+            <button onClick={() => console.log(props.handBet)}>Log handBet</button>
         </div>
     </div>
   )

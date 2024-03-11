@@ -14,7 +14,8 @@ import Betting from './components/Betting';
 
 function App() {
 
-  const debug = false
+  const debug = true
+  // Bug: a Full House consisting of 3oaK and 2x Two Pair will highlight all seven cards, but will attribute the lowest Pair to the Full House
 
   const [deckState, setDeckState] = useState([])
   const [playerHand, setPlayerHand] = useState([])
@@ -52,6 +53,13 @@ function App() {
       setGameHands([...gameHands, bestHandCleanup()])
     }
   },[bestHand])
+
+  useEffect(() => {
+    if (gameState === 2){
+      setGameHands([])
+    }
+  }, [gameState])
+  
 
   // class constructor for each Card object
   class Card {
@@ -279,8 +287,9 @@ function App() {
       setBestHand("Four of a Kind")
     }
     else if (Object.keys(winningHands).includes("Three of a Kind") && (Object.keys(winningHands).includes("Pair"))){
-      
-      setBestHand(`Full House, ${winningHands["Three of a Kind"]}s over ${winningHands["Pair"]}s `)
+      let correctPluralThree = winningHands["Three of a Kind"] == "Six" ? "es" : "s"
+      let correctPluralPair = winningHands["Pair"] == "Six" ? "es" : "s"
+      setBestHand(`Full House, ${winningHands["Three of a Kind"]}${correctPluralThree} over ${winningHands["Pair"]}${correctPluralPair}`)
       
     }
     
@@ -367,10 +376,11 @@ function App() {
 
   return (
     <div className="App">
+      {gameState}
       <audio id="shuffleAudio" autoPlay={false} src={shuffleAudio}/>
       <audio id="dealAudio" autoPlay={false} src={dealAudio}/>
-      <div>
-      <img className='helpChip' src={helpChip} alt="shuffle button" draggable="false" onClick={() => displayHelp()}></img>
+      <div className='helpChip animate-chip'>
+        <img className='chips' src={helpChip} alt="shuffle button" draggable="false" onClick={() => displayHelp()}></img>
       </div>
       <div className='content-flex'>
         <div id='title-area'>
@@ -381,14 +391,14 @@ function App() {
         
         <div className='betting-module'>
           {/* <div className='bet-on'>Bet On : {handBet === "unset" ? "No Bet" : handBet}</div> */}
-          <Betting gameState={gameState} bestHand={bestHand} handBet={handBet} setHandBet={setHandBet} gameBet={gameBet} setGameBet={setGameBet} gameHands={gameHands}/>
+          <Betting gameState={gameState} bestHand={bestHand} handBet={handBet} setHandBet={setHandBet} gameBet={gameBet} setGameBet={setGameBet} gameHands={gameHands} setGameHands={setGameHands}/>
         </div>
         
         <div className='card-area'>
           <div className='card-outlines'>
             {
-              cardOutlines.map(outline => (
-                <div className='card-outline'></div>
+              cardOutlines.map(index => (
+                <div key={index} className='card-outline'></div>
                 ))
               }
           </div>
@@ -417,15 +427,15 @@ function App() {
           
         </div>
         <div id="draw-chip-area">
-          <img className='chips' style={handBet === "unset" ? {opacity: "0.5"} : {}} src={shuffleChip} alt="shuffle button" draggable="false" onClick={handBet === "unset" ? () => console.log("Cannot start game without setting a bet") : () => stackDeck()}></img>
-          <img className='chips' id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
+          <img className={handBet === "unset" ? 'chips' : 'chips animate-chip'} style={handBet === "unset" ? {opacity: "0.5"} : {}} src={shuffleChip} alt="shuffle button" draggable="false" onClick={handBet === "unset" ? () => console.log("Cannot start game without setting a bet") : () => stackDeck()}></img>
+          <img className={deckState.length > 0 && gameState !== 2 ? 'chips animate-chip' : 'chips'} id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
         <h3>Current hand : <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
       </div>
 
 
       { debug===true ?
-        <Debug Card={Card} setPlayerHand={setPlayerHand}/>
+        <Debug Card={Card} setPlayerHand={setPlayerHand} gameHands={gameHands} handBet={handBet}/>
         :
         <></>
       }

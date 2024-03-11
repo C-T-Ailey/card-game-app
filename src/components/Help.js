@@ -15,7 +15,7 @@ export default function Help(props) {
 
     const rulesTwo = "1. Set your bet in the Betting panel by choosing your predicted best hand and the amount of chips you wish to bet.\n\n2. Ready the deck by clicking the Shuffle chip. You can click the Shuffle chip again at any time to reset the game.\n\n3. Click the Deal chip to deal out your hand. Cards for winning hands will be highlighted.\n\n4. After the 7th hand is dealt, the game will end and any winning bets will be paid out."
 
-    const payouts = "One Pair: 1 : 2 \n Two Pair: 1 : 3 \n Three of a Kind: 1 : 4 \n Straight: 1 : 5 \n Flush: 1 : 6 \n Full House: 1 : 10 \n Four of a Kind: 1 : 12 \n Straight Flush: 1 : 15 \n Royal Flush: 1 : 20"
+    const payouts = "One Pair: 1 : 1 \n Two Pair: 1 : 2 \n Three of a Kind: 1 : 3 \n Straight: 1 : 4 \n Flush: 1 : 5 \n Full House: 1 : 10 \n Four of a Kind: 1 : 12 \n Straight Flush: 1 : 15 \n Royal Flush: 1 : 20"
 
     // "One Pair": 2, "Two Pair": 3, "Three of a Kind": 4, "Straight": 5, "Flush": 6, "Full House": 10, "Four of a Kind": 12, "Straight Flush": 15, "Royal Flush!": 20
 

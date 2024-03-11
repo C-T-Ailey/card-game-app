@@ -84,7 +84,7 @@ export default function Betting(props) {
 
     const handNames = ["One Pair", "Two Pair", "Three of a Kind", "Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush", "Royal Flush!"]
 
-    const handValues = {"One Pair": 2, "Two Pair": 3, "Three of a Kind": 4, "Straight": 5, "Flush": 6, "Full House": 10, "Four of a Kind": 12, "Straight Flush": 15, "Royal Flush!": 20}
+    const handValues = {"One Pair": 1, "Two Pair": 2, "Three of a Kind": 3, "Straight": 4, "Flush": 5, "Full House": 10, "Four of a Kind": 12, "Straight Flush": 15, "Royal Flush!": 20}
     
 
   return (
@@ -107,11 +107,14 @@ export default function Betting(props) {
             </div>
             <div className='best-hand-buttons'>
                 <button className='bet-button bet-button-b' disabled={props.gameState === 1 ? true : false} onClick={() => previous()}>{"<"}</button>
-                <div className='selected-best'>
+                <div className={props.gameHands.includes(handNames[selectedBestHand]) ? 'selected-best won-bet' : 'selected-best'}>
                     {handNames[selectedBestHand]}
                 </div>
                 <button className='bet-button bet-button-r' disabled={props.gameState === 1 ? true : false} onClick={() => next()}>{">"}</button>
             </div>
+                <div>
+                    {`1 : ${handValues[handNames[selectedBestHand]]}`}
+                </div>
                 <button className='place-bet' disabled={props.gameState === 1 ? true : false} onClick={() => placeBet()}>Place Bet</button>
         </div>
         <div className='placed-bet'>

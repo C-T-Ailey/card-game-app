@@ -61,13 +61,33 @@
 }
 
 .bet-button-r {
-    background-color: red;
+    background-image: linear-gradient(225deg, red, #ff8888);
     outline: 2px solid red;
 }
 
+.bet-button-r:hover {
+    background-image: linear-gradient(225deg, #ff8888, red);
+}
+
+.bet-button-r:active {
+    background-image: linear-gradient(225deg, #d67171, rgb(194, 0, 0));
+    border: 2px solid rgb(194, 194, 194);
+    
+}
+
 .bet-button-b {
-    background-color: black;
+    background-image: linear-gradient(225deg, rgb(0, 0, 0), #474747);
     outline: 2px solid black;
+}
+
+.bet-button-b:hover {
+    background-image: linear-gradient(225deg, #474747, rgb(0, 0, 0));
+}
+
+.bet-button-b:active {
+    background-image: linear-gradient(225deg, #363636, rgb(0, 0, 0));
+    border: 2px solid rgb(194, 194, 194);
+
 }
 
 .best-hand-buttons {
