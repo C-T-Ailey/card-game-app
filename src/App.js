@@ -376,7 +376,6 @@ function App() {
 
   return (
     <div className="App">
-      {gameState}
       <audio id="shuffleAudio" autoPlay={false} src={shuffleAudio}/>
       <audio id="dealAudio" autoPlay={false} src={dealAudio}/>
       <div className='helpChip animate-chip'>
