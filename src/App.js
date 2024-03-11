@@ -14,7 +14,7 @@ import Betting from './components/Betting';
 
 function App() {
 
-  const debug = true
+  const debug = false
   // Bug: a Full House consisting of 3oaK and 2x Two Pair will highlight all seven cards, but will attribute the lowest Pair to the Full House
 
   const [deckState, setDeckState] = useState([])
