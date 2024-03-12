@@ -96,56 +96,56 @@ export default function Help(props) {
               <h2>Poker Hands Glossary</h2>
               <p>One Pair: Two cards of the same rank.</p>
               <div className='help-cards'>
-                {onePair.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+                {onePair.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <p>Two Pair: Two pairs of cards, each pair with matching ranks.</p>
               <div className='help-cards'>
-              {twoPair.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+              {twoPair.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <p>Three of a Kind: Three cards of the same rank.</p>
               <div className='help-cards'>
-              {threeKind.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+              {threeKind.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <p>Straight: Five cards of different suits with sequential ranks, e.g. Ace of Clubs, Two of Diamonds, Three of Hearts, Four of Spades, Five of Clubs.</p>
               <div className='help-cards'>
-              {straight.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+              {straight.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <p>Flush: Five cards of different ranks with the same suit, e.g. Two of Diamonds, Five of Diamonds, Nine of Diamonds, Ten of Diamonds, King of Diamonds.</p>
               <div className='help-cards'>
-              {flush.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+              {flush.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <p>Full House: Three of a Kind and One Pair in the same hand.</p>
               <div className='help-cards'>
-              {fullHouse.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+              {fullHouse.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <p>Four of a Kind: One card of each suit in the same rank.</p>
               <div className='help-cards'>
-              {fourKind.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+              {fourKind.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <p>Straight Flush: Five cards of the same suit with sequential ranks, e.g. Ace of Hearts, Two of Hearts, Three of Hearts, Four of Hearts, Five of Hearts.</p>
               <div className='help-cards'>
-              {straightFlush.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+              {straightFlush.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <p>Royal Flush: A Ten, Jack, Queen, King and Ace of the same suit.</p>
               <div className='help-cards'>
-              {royalFlush.map(card => (
-                  <PlayingCard winners={[]} card={card}></PlayingCard>
+              {royalFlush.map((card, index) => (
+                  <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
               <div style={{marginBottom: "2em"}}></div>

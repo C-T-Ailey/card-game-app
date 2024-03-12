@@ -5,8 +5,17 @@
     font-weight: bold;
     font-size: large;
     color: black;
+    
   }
   
+  .place-card {
+    animation: place 0.28s linear 0s 1 forwards;
+  }
+
+  .nope {
+    visibility: hidden;
+  }
+
   /* .card-template {
     display: flex;
     width: 96px;
@@ -100,3 +109,13 @@
     position: relative;
     /* bottom: 10%; */
   }
+
+  @keyframes place {
+    0% {
+        /* transform: translateY(0%); */
+        transform: scale(1.4);
+        opacity: 0;
+        /* background-image: url("./src/back.jpg"); */
+        background-size: cover;
+    }
+}

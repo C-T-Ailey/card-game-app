@@ -28,6 +28,7 @@ function App() {
   const [gameBet, setGameBet] = useState()
   const [gameHands, setGameHands] = useState([])
   const [showHelp, setShowHelp] = useState(false)
+  const [cardToPlace, setCardToPlace] = useState(0)
 
   const cardOutlines = [1, 2, 3, 4, 5, 6, 7]
 
@@ -408,8 +409,10 @@ function App() {
           </div>
           <div className='hand-flex'>
               { playerHand.length ?
-                  playerHand.map(card => (
-                    <PlayingCard  winners={winners} card={card}></PlayingCard>
+                  playerHand.map((card, index) => (
+                    // <div key={index} className={cardToPlace >= index ? 'place-card' : 'nope'} onAnimationEnd={() => setCardToPlace(index + 1)}>
+                      <PlayingCard winners={winners} card={card} cardToPlace={cardToPlace}></PlayingCard>
+                    // </div>
                     )) :
                     <></>
                   }
