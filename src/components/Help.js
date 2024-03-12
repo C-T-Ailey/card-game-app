@@ -14,7 +14,7 @@ export default function Help(props) {
 
     const rulesForFinal = "Welcome to Seven Card Sloane; a single-player card game based on Texas Hold'Em Poker, in which your only opponent is your own sense of optimism. Seven hands of seven cards will be dealt out to you in sequence -- your goal is to bet on what the highest scoring hand to be dealt will be, with the option to go all-in on the initial bet or to make individual bets on whether the next hand will be better or worse than the last."
 
-    const rulesTwo = "1. Place your bet by selecting the amount of chips you wish to bet, a scoring hand you predict you will draw, and then clicking the Place Bet button.\n\n2. Click the Shuffle chip to ready the deck and start the game.\n\n3. Click the Deal chip to deal out a hand. Cards for scoring hands will be automatically highlighted and registered, and if a scoring hand matches the one on which you placed your bet, you can consider the game won.\n\n4. After the 7th hand is dealt, the game will end and any winning bets will be paid out. You can then begin a new game by repeating step 1."
+    const rulesTwo = "1. Place your bet by selecting the amount of chips you wish to bet, a scoring hand you predict you will draw, and then clicking the Place Bet button.\n\n2. Click the Shuffle chip to ready the deck and start the game.\n\n3. Click the Deal chip to deal out a hand. Cards for scoring hands will be automatically highlighted and registered, and if a scoring hand matches the one on which you placed your bet, you can consider the game won.\n\n4. After dealing your 7th hand, the game will end and winning bets will be paid out. You can then begin a new game by repeating step 1."
 
     const payouts = "One Pair: 1 : 1 \n Two Pair: 1 : 2 \n Three of a Kind: 1 : 3 \n Straight: 1 : 4 \n Flush: 1 : 5 \n Full House: 1 : 10 \n Four of a Kind: 1 : 12 \n Straight Flush: 1 : 15 \n Royal Flush: 1 : 20"
 
@@ -70,19 +70,19 @@ export default function Help(props) {
     ]
 
     const straightFlush = [
-      new Card("Hearts", "Four", 3),
-      new Card("Hearts", "Five", 4), 
-      new Card("Hearts", "Six", 5), 
-      new Card("Hearts", "Seven", 6), 
-      new Card("Hearts", "Eight", 7)
+      new Card("Spades", "Four", 3),
+      new Card("Spades", "Five", 4), 
+      new Card("Spades", "Six", 5), 
+      new Card("Spades", "Seven", 6), 
+      new Card("Spades", "Eight", 7)
     ]
 
     const royalFlush = [
-      new Card("Spades", "Ten", 9), 
-      new Card("Spades", "Jack", 10), 
-      new Card("Spades", "Queen", 11), 
-      new Card("Spades", "King", 12), 
-      new Card("Spades", "Ace", 0)
+      new Card("Hearts", "Ten", 9), 
+      new Card("Hearts", "Jack", 10), 
+      new Card("Hearts", "Queen", 11), 
+      new Card("Hearts", "King", 12), 
+      new Card("Hearts", "Ace", 0)
     ]
 
   return (
