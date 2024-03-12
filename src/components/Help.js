@@ -112,13 +112,13 @@ export default function Help(props) {
                   <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
-              <p>Straight: Five cards of different suits with sequential ranks, e.g. Ace of Clubs, Two of Diamonds, Three of Hearts, Four of Spades, Five of Clubs.</p>
+              <p>Straight: Five cards of different suits with sequential ranks.</p>
               <div className='help-cards'>
               {straight.map((card, index) => (
                   <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
-              <p>Flush: Five cards of different ranks with the same suit, e.g. Two of Diamonds, Five of Diamonds, Nine of Diamonds, Ten of Diamonds, King of Diamonds.</p>
+              <p>Flush: Five cards of different ranks with the same suit.</p>
               <div className='help-cards'>
               {flush.map((card, index) => (
                   <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
@@ -136,7 +136,7 @@ export default function Help(props) {
                   <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
                 ))}
               </div>
-              <p>Straight Flush: Five cards of the same suit with sequential ranks, e.g. Ace of Hearts, Two of Hearts, Three of Hearts, Four of Hearts, Five of Hearts.</p>
+              <p>Straight Flush: Five cards of the same suit with sequential ranks.</p>
               <div className='help-cards'>
               {straightFlush.map((card, index) => (
                   <PlayingCard key={index} winners={[]} card={card}></PlayingCard>
