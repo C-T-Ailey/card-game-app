@@ -71,8 +71,13 @@
 
 .bet-button-r:active {
     background-image: linear-gradient(225deg, #d67171, rgb(194, 0, 0));
-    border: 2px solid rgb(194, 194, 194);
-    
+    border: 2px solid rgb(194, 194, 194); 
+}
+
+.bet-button-r:disabled, .bet-button-r:hover, .bet-button-r:active {
+    opacity: 50%;
+    background-image: linear-gradient(225deg, red, #ff8888);
+    border: 2px solid white;
 }
 
 .bet-button-b {
@@ -87,7 +92,12 @@
 .bet-button-b:active {
     background-image: linear-gradient(225deg, #363636, rgb(0, 0, 0));
     border: 2px solid rgb(194, 194, 194);
+}
 
+.bet-button-b:disabled, .bet-button-b:hover, .bet-button-b:active {
+    opacity: 50%;
+    background-image: linear-gradient(225deg, rgb(0, 0, 0), #474747);
+    border: 2px solid white;
 }
 
 .best-hand-buttons {
@@ -102,15 +112,81 @@
     width: 7em;
 }
 
+.closed-bets {
+    height: 2em;
+    width: 10em;
+    font-size: 2rem;
+}
+
 .place-bet {
     height: 2em;
     width: 8em;
     font-size: 1.3rem;
     font-weight: bold;
     border: 2px dashed white;
-    border-radius: 7px;
+    border-radius: 7px;    
     background-color: rgba(0,0,0,0);
     font-family: 'Rokkitt', 'Serif';
     color: white;
-
+    filter: drop-shadow(0px 0px 1px black)
 }
+
+.place-bet:hover {
+    animation: bet-shadow-hover 0.1s linear 0s 1 forwards;    
+}
+
+.out-of-chips {
+    animation: shake-horizontal 0.7s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+}
+
+@keyframes move-bg {
+    to {
+        background-position: var(--bg-size) 0;
+    }
+}
+
+@keyframes bet-shadow-hover {
+    0% {
+
+    }
+
+    100% {
+        filter: drop-shadow(2px 5px 1px black)
+    }
+}
+
+@keyframes button-glow {
+    0% {
+        
+    }
+
+    100% {
+        /* color: rgb(0, 150, 0); */
+        filter: drop-shadow(2px 2px 2px black);
+        /* border: 2px dashed rgb(0,150,0); */
+    }
+}
+
+  @keyframes shake-horizontal {
+    0%,
+    100% {
+              transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70% {
+              transform: translateX(-10px);
+    }
+    20%,
+    40%,
+    60% {
+              transform: translateX(10px);
+    }
+    80% {
+              transform: translateX(8px);
+    }
+    90% {
+              transform: translateX(-8px);
+    }
+  }

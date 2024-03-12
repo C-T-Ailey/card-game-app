@@ -17,6 +17,8 @@ function App() {
   const debug = false
   // Bug: a Full House consisting of 3oaK and 2x Two Pair will highlight all seven cards, but will attribute the lowest Pair to the Full House
 
+  // Game does not work as intended. Currently rewards guessing whether a hand will show up, not whether it's the highest scoring hand.
+
   const [deckState, setDeckState] = useState([])
   const [playerHand, setPlayerHand] = useState([])
   const [bestHand, setBestHand] = useState("")
@@ -91,6 +93,9 @@ function App() {
     }
     else if (bestHand.slice(bestHand.length-5,bestHand.length) === "Flush"){
       return "Flush"
+    }
+    else if (bestHand.slice(0,10) === "Full House"){
+      return "Full House"
     }
     else if (bestHand.slice(bestHand.length-1) === ")"){
       return "Two Pair"
@@ -426,7 +431,7 @@ function App() {
           
         </div>
         <div id="draw-chip-area">
-          <img className={handBet === "unset" ? 'chips' : 'chips animate-chip'} style={handBet === "unset" ? {opacity: "0.5"} : {}} src={shuffleChip} alt="shuffle button" draggable="false" onClick={handBet === "unset" ? () => console.log("Cannot start game without setting a bet") : () => stackDeck()}></img>
+          <img className={handBet === "unset" || gameState === 1 ? 'chips' : 'chips animate-chip'} style={handBet === "unset" || gameState === 1 ? {opacity: "0.5"} : {}} src={shuffleChip} alt="shuffle button" draggable="false" onClick={handBet === "unset" || gameState === 1 ? () => console.log("Cannot start game without setting a bet") : () => stackDeck()}></img>
           <img className={deckState.length > 0 && gameState !== 2 ? 'chips animate-chip' : 'chips'} id='draw-chip' src={deckState.length > 0 && gameState !== 2 ? drawChip : drawChipInactive} alt="deal button" draggable="false" onClick={ deckState.length > 0 && gameState !== 2 ? () => drawHand() : () => console.log("Cannot deal out if game isn't active")}></img>
         </div>
         <h3>Current hand : <span className={bestHand === "Royal Flush!" ? "royal-flush" : ""}>{bestHand}</span></h3>
@@ -439,7 +444,7 @@ function App() {
         <></>
       }
 
-      <Help showHelp={showHelp} setShowHelp={setShowHelp}></Help>
+      <Help showHelp={showHelp} setShowHelp={setShowHelp} Card={Card}></Help>
 
     </div>
   );
